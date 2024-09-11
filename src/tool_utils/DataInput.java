@@ -13,7 +13,7 @@ import java.util.Scanner;
  */
 public class DataInput {
 
-    public static final String FORMAT_NUMBER = "^\\d+$";
+    public static final String FORMAT_NUMBER = "^-?\\d+$";
 
     public static Scanner openScanner() {
         return new Scanner(System.in);
@@ -37,7 +37,7 @@ public class DataInput {
         String input = sc.nextLine();
 
         if (input.trim().equals("")) {
-            throw new Exception("Invalid data");
+            throw new Exception("The field is not empty");
         } else {
             return input;
         }

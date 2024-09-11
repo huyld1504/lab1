@@ -158,11 +158,27 @@ public class ProductList implements IItemManager<Product>, IFileManager {
             }
         }
     }
+    
+    public void openTable () {
+        System.out.println("_______________________________________________________________________________________");
+                System.out.println("ID          Name            Brand name  Category name        Year        Price");
+    }
+    
+    public void closeTable () {
+        System.out.println("_______________________________________________________________________________________");
+    }
 
     public void printListFromFile() {
+        this.openTable();
         for (Product product : list) {
-            System.out.println(product.printInfoProduct());
+            String line = "";
+            String[] fields = product.toString().split(",");
+            for (String field : fields) {
+                line += field + "        ";
+            }
+            System.out.println(line);
         }
+        this.closeTable();
     }
 
     @Override

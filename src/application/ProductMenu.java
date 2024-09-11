@@ -84,7 +84,7 @@ public class ProductMenu {
                 case 3:
                     System.out.println(">>>> UPDATE PRODUCT BY ID <<<<");
                     while (!flagOption) {
-                        this.deleteProductById(listOfProductList);
+                        this.updateProductById(listOfProductList);
                         flagOption = this.confirmYesOrNo("Go to menu (y/n): ");
                     }
                     break;
@@ -159,40 +159,55 @@ public class ProductMenu {
         categoryList.loadFile();
 
         try {
+//            String requireField = "This field is required, pleas enter again: ";
+            String validFieldModelYear = "This field is invalid, please enter again: ";
+            
+            // Product ID
             String id = DataInput.getString(">> Enter id: ").toUpperCase();
             while (productList.checkExistId(id)) {
-                id = DataInput.getString(">> The above ID existed, please enter again: ");
+                id = DataInput.getString(">> The product ID existed, please enter again: ");
             }
+//            while (!validateString(id)) {
+//                id = DataInput.getString(requireField);
+//            }
+            
+            //Product name
             String name = DataInput.getString(">> Enter name: ");
+//            while (!validateString(name)) {
+//                name = DataInput.getString(requireField);
+//            }
+            
+            //Brand
             String brandId = DataInput.getString(">> Enter brand id: ").toUpperCase();
             while (!brandList.checkExistId(brandId)) {
                 brandId = DataInput.getString(">> Brand not found, please enter again: ").toUpperCase();
             }
+//            while (!validateString(brandId)) {
+//                brandId = DataInput.getString(requireField);
+//            }
+            
+            //Category
             String categoryId = DataInput.getString(">> Enter category id: ").toUpperCase();
             while (!categoryList.checkExistId(categoryId)) {
                 categoryId = DataInput.getString(">> Category not found, please enter again: ").toUpperCase();
             }
+//            while (!validateString(categoryId)) {
+//                categoryId = DataInput.getString(requireField);
+//            }
+            
+            //Model year and list price
             int modelYear, listPrice;
             modelYear = DataInput.getInt(">> Enter year: ");
-            listPrice = DataInput.getInt(">> Enter price: ");
-
-            //Validate data
-            boolean isValidData = !validateString(id)
-                    && !validateString(name)
-                    && !validateString(brandId)
-                    && !validateString(categoryId)
-                    && validateYear(modelYear)
-                    && validatePositiveInt(listPrice)
-                    && validateFormat(id, FORMAT_PRODUCT_ID)
-                    && validateFormat(brandId, FORMAT_BRAND_ID)
-                    && validateFormat(categoryId, FORMAT_CATEGORY_ID);
-
-            if (isValidData) {
-                result = new Product(modelYear, listPrice, brandList.getOne(brandId), categoryList.getOne(categoryId), id, name);
-            } else {
-                System.out.println("Invalid Data");
+            while (!validateYear(modelYear)) {
+                modelYear = DataInput.getInt(validFieldModelYear);
             }
-
+            listPrice = DataInput.getInt(">> Enter price: ");
+            while (!validatePositiveInt(listPrice)) {
+                listPrice = DataInput.getInt("Price is a positive number, please enter again: ");
+            }
+            
+            //create new product
+            result = new Product(modelYear, listPrice, brandList.getOne(brandId), categoryList.getOne(categoryId), id, name);
             return result;
         } catch (Exception e) {
             System.out.println(e.getMessage());
@@ -210,7 +225,7 @@ public class ProductMenu {
                 System.out.println("Have no any Product");
             } else {
                 listOfProductSearchByName.stream().forEach(p -> {
-                    System.out.println(p.printInfoProduct());
+                    System.out.println(p.toString());
                 });
             }
         } catch (Exception e) {
@@ -257,7 +272,10 @@ public class ProductMenu {
                 boolean isValidData = validateFormat(brandId, FORMAT_BRAND_ID) && validateFormat(categoryId, FORMAT_CATEGORY_ID);
                 if (isValidData) {
                     Product newProduct = new Product(modelYear, listPrice, brandList.getOne(brandId), categoryList.getOne(categoryId), oldProduct.getId(), name);
-                    System.out.println(productList.update(oldProduct.getId(), newProduct) ? "Updated" : "Failed");
+                    boolean confirmUpdate = this.confirmYesOrNo("Do you want to update this product?(y/n) ");
+                    if (confirmUpdate) {
+                        System.out.println(productList.update(oldProduct.getId(), newProduct) ? "Updated" : "Failed");
+                    }
                 } else {
                     System.out.println("Invalid Data");
                 }

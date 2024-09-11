@@ -60,7 +60,8 @@ public class Product extends Item{
         this.category = category;
     }
 
-    public String printInfoProduct() {
+    @Override
+    public String toString() {
         String s = String.format("%s,%s,%s,%s,%d,%d", this.getId(), this.getName(), this.brand.getName(), this.category.getName(), this.modelYear, this.listPrice);
         return s;
     }
