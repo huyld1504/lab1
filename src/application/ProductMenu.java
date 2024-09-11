@@ -260,6 +260,7 @@ public class ProductMenu {
                     System.out.println(productList.update(oldProduct.getId(), newProduct) ? "Updated" : "Failed");
                 } else {
                     System.out.println("Invalid Data");
+                    
                 }
             } else {
                 System.out.println("Product does not exists!");
