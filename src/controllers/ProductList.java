@@ -3,11 +3,11 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package data_objects;
+package controllers;
 
-import business_objects.Product;
-import business_objects.Brand;
-import business_objects.Category;
+import models.Product;
+import models.Brand;
+import models.Category;
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileReader;

@@ -3,15 +3,15 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package application;
+package views;
 
 import tool_utils.DataInput;
 import tool_utils.DataValidation;
-import business_objects.Product;
-import data_objects.BrandList;
-import data_objects.CategoryList;
+import models.Product;
+import controllers.BrandList;
+import controllers.CategoryList;
 import application.service.ProductService;
-import data_objects.ProductList;
+import controllers.ProductList;
 import java.util.List;
 
 /**
