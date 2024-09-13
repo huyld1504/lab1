@@ -15,7 +15,7 @@ import java.io.PrintWriter;
 import java.util.ArrayList;
 import java.util.List;
 import java.io.IOException;
-import FileManager.IFileManager;
+import filemanager.IFileManager;
 
 /**
  *
@@ -71,7 +71,6 @@ public class ProductList implements IItemManager<Product>, IFileManager {
         Product oldProduct = this.getOne(id);
         
         int position = this.list.indexOf(oldProduct);
-//        System.out.println("position: " + position);
         if (position == -1) return false;
         
         this.list.set(position, params);       
@@ -161,7 +160,7 @@ public class ProductList implements IItemManager<Product>, IFileManager {
     
     public void openTable () {
         System.out.println("_______________________________________________________________________________________");
-                System.out.println("ID          Name            Brand name  Category name        Year        Price");
+                System.out.println("ID          Name            Brand name  Category name        Year        Price ");
     }
     
     public void closeTable () {

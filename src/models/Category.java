@@ -14,4 +14,10 @@ public class Category extends Item{
     public Category(String id, String name) {
         super(id, name);
     }
+    
+    @Override
+    public String toString () {
+        String str = String.format("ID: %s   Name: %s", this.getId().toUpperCase(), this.getName());
+        return str;
+    }
 }

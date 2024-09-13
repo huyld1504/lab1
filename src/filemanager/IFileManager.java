@@ -3,13 +3,15 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package FileManager;
+package filemanager;
 
 /**
  *
  * @author Asus
  */
 public interface IFileManager {
+//    void loadFile (String fileName);
+//    void saveFile (String fileName);
     void loadFile();
     void saveFile();
 }

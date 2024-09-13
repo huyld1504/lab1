@@ -9,7 +9,7 @@ package views;
  *
  * @author Asus
  */
-public class program {
+public class Program {
 
     public static void main(String[] args) {
         ProductMenu menu = new ProductMenu();

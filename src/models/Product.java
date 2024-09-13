@@ -62,7 +62,7 @@ public class Product extends Item{
 
     @Override
     public String toString() {
-        String s = String.format("%s,%s,%s,%s,%d,%d", this.getId(), this.getName(), this.brand.getName(), this.category.getName(), this.modelYear, this.listPrice);
+        String s = String.format("%s,%s,%s,%s,%d,%d", this.getId().toUpperCase(), this.getName(), this.brand.getName(), this.category.getName(), this.modelYear, this.listPrice);
         return s;
     }
     

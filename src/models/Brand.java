@@ -20,4 +20,9 @@ public class Brand extends Item{
     public String getAddress () {
         return this.address;
     }   
+    
+    public String toString () {
+        String str = String.format("ID: %s  Name: %s  Made in: %s", this.getId().toUpperCase(), this.getName(), this.getAddress());
+        return str;
+    }
 }

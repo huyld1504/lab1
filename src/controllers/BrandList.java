@@ -13,7 +13,7 @@ import java.io.IOException;
 import java.io.PrintWriter;
 import java.util.ArrayList;
 import java.util.List;
-import FileManager.IFileManager;
+import filemanager.IFileManager;
 
 /**
  *
@@ -130,6 +130,18 @@ public class BrandList implements IItemManager<Brand>, IFileManager{
             }
         }
 
+    }
+    
+    public void printList () {
+        if (this.brands.isEmpty()) {
+            System.out.println("Brands do not exists");
+            return;
+        }
+        
+        System.out.println("---- List brands ----");
+        for (Brand brand : brands) {
+            System.out.println(brand);
+        }
     }
 
     @Override

@@ -13,7 +13,7 @@ import java.io.IOException;
 import java.io.PrintWriter;
 import java.util.ArrayList;
 import java.util.List;
-import FileManager.IFileManager;
+import filemanager.IFileManager;
 
 /**
  *
@@ -128,6 +128,18 @@ public class CategoryList implements IItemManager<Category>, IFileManager {
             } catch (IOException e) {
                 System.out.println(e.getMessage());
             }
+        }
+    }
+    
+    public void printList () {
+        if (this.list.isEmpty()) {
+            System.out.println("Categories do not exist");
+            return;
+        }
+        
+        System.out.println("---- Category list ----");
+        for (Category category : this.list) {
+            System.out.println(category);
         }
     }
 

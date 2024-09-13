@@ -43,7 +43,7 @@ public class DataInput {
         }
     }
     
-    public static String getNewString(String message, String oldData) throws Exception {
+    public static String getString(String message, String oldData) throws Exception {
         Scanner sc = openScanner();
         System.out.print(message);
         String input = sc.nextLine();
@@ -54,7 +54,7 @@ public class DataInput {
         return input;
     }
     
-    public static int getNewInt (String message, int oldData) throws Exception {
+    public static int getInt (String message, int oldData) throws Exception {
         Scanner sc = openScanner();
         System.out.print(message);
         String input = sc.nextLine();
@@ -64,5 +64,26 @@ public class DataInput {
         }
         
         return Integer.parseInt(input);
+    }
+    
+    public static boolean confirmYesOrNo(String message) {
+        try {
+            boolean flag = true;
+            String option;
+            while (flag) {
+                option = DataInput.getString(message);
+                if (option.equalsIgnoreCase("y")) {
+                    flag = true;
+                    break;
+                } else if (option.equalsIgnoreCase("n")) {
+                    flag = false;
+                    break;
+                }
+            }
+            return flag;
+        } catch (Exception e) {
+            System.out.println(e.getMessage());
+            return false;
+        }
     }
 }
