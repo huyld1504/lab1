@@ -18,7 +18,7 @@ import java.util.List;
  *
  * @author Asus
  */
-public class ProductMenu {
+public class Menu {
 
     final String FORMAT_PRODUCT_ID = "[p | P]\\d{3}";
     final String FORMAT_BRAND_ID = "[B | b]\\d{3}";
@@ -26,7 +26,7 @@ public class ProductMenu {
 
     private ProductService services;
 
-    public ProductMenu() {
+    public Menu() {
         this.services = new ProductService();
         this.services.addService("1. Add product");
         this.services.addService("2. Search product by product name");
@@ -46,7 +46,7 @@ public class ProductMenu {
     }
 
     private boolean validateYear(int y) {
-        return DataValidation.isValidModelYear(y);
+        return DataValidation.isValidModelYear(y) && DataValidation.isPositiveNumber(y);
     }
 
     private boolean validateFormat(String str, String format) {
@@ -57,7 +57,6 @@ public class ProductMenu {
     public void runMenu() {
         boolean flag = true;
         ProductList listOfProductList = new ProductList();
-        listOfProductList.loadFile();
 
         System.out.println("********** PRODUCT MANAGEMENT **********");
         do {
@@ -129,16 +128,12 @@ public class ProductMenu {
     }
 
     public Product createProduct() {
-        Product result = null;
+        Product result;
         ProductList productList = new ProductList();
-        productList.loadFile();
         BrandList brandList = new BrandList();
-        brandList.loadFile();
         CategoryList categoryList = new CategoryList();
-        categoryList.loadFile();
 
         try {
-//            String requireField = "This field is required, please enter again: ";
             String validFieldModelYear = "This field is invalid, please enter again: ";
 
             // Product ID
@@ -153,9 +148,6 @@ public class ProductMenu {
 
             //Product name
             String name = DataInput.getString(">> Enter name: ");
-//            while (!validateString(name)) {
-//                name = DataInput.getString(requireField);
-//            }
 
             //Brand
             String brandId = DataInput.getString(">> Enter brand id: ").toUpperCase();
@@ -191,7 +183,7 @@ public class ProductMenu {
             }
 
             //create new product
-            result = new Product(modelYear, listPrice, brandList.getOne(brandId), categoryList.getOne(categoryId), id, name);
+            result = new Product(modelYear, listPrice, brandList.getItem(brandId), categoryList.getItem(categoryId), id, name);
             return result;
         } catch (Exception e) {
             System.out.println(e.getMessage());
@@ -201,7 +193,7 @@ public class ProductMenu {
 
     public void printProductBySearchName() {
         ProductList productList = new ProductList();
-        productList.loadFile();
+//        productList.loadFile();
         try {
             String params = DataInput.getString("Enter the name you want to search: ");
             List<Product> listOfProductSearchByName = productList.searchByName(params);
@@ -209,7 +201,7 @@ public class ProductMenu {
                 System.out.println("Have no any Product");
             } else {
                 listOfProductSearchByName.stream().forEach(p -> {
-                    System.out.println(p.toString());
+                    System.out.println(p.printInfo());
                 });
             }
         } catch (Exception e) {
@@ -232,13 +224,13 @@ public class ProductMenu {
 
     public void updateProductById(ProductList productList) {
         BrandList brandList = new BrandList();
-        brandList.loadFile();
+//        brandList.loadFile();
         CategoryList categoryList = new CategoryList();
         categoryList.loadFile();
 
         try {
             String idUpdate = DataInput.getString("Enter the product's id to update: ");
-            Product oldProduct = productList.getOne(idUpdate);
+            Product oldProduct = productList.getItem(idUpdate);
             if (oldProduct != null) {
                 // form fill the update infomation
                 String name = DataInput.getString("Enter new name: ", oldProduct.getName());
@@ -255,7 +247,7 @@ public class ProductMenu {
 
                 boolean isValidData = validateFormat(brandId, FORMAT_BRAND_ID) && validateFormat(categoryId, FORMAT_CATEGORY_ID);
                 if (isValidData) {
-                    Product newProduct = new Product(modelYear, listPrice, brandList.getOne(brandId), categoryList.getOne(categoryId), oldProduct.getId(), name);
+                    Product newProduct = new Product(modelYear, listPrice, brandList.getItem(brandId), categoryList.getItem(categoryId), oldProduct.getId(), name);
                     boolean confirmUpdate = DataInput.confirmYesOrNo("Do you want to update this product?(y/n) ");
                     if (confirmUpdate) {
                         System.out.println(productList.update(oldProduct.getId(), newProduct) ? "Updated" : "Failed");

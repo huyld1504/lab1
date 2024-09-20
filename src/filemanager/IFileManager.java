@@ -5,13 +5,16 @@
  */
 package filemanager;
 
+import java.util.List;
+
 /**
  *
  * @author Asus
+ * @param <T>
  */
-public interface IFileManager {
-//    void loadFile (String fileName);
-//    void saveFile (String fileName);
-    void loadFile();
-    void saveFile();
+public interface IFileManager<T> {
+
+    List<T> loadFile(String fileName) throws Exception;
+
+    boolean saveFile(String fileName, List<T> list) throws Exception;
 }

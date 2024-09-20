@@ -14,11 +14,9 @@ import java.util.List;
  */
 public interface IItemManager<Item> {
    public List<Item> searchByName(String name);
-   public Item getOne(String id);
+   public Item getItem(String id);
    public boolean add(Item item);
    public boolean update(String id, Item params);
    public boolean delete(String id);
-//   public void saveFile();
-//   public void loadFile();
    public boolean checkExistId(String id);
 }

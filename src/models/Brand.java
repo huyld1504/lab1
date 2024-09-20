@@ -21,8 +21,9 @@ public class Brand extends Item{
         return this.address;
     }   
     
+    @Override
     public String toString () {
-        String str = String.format("ID: %s  Name: %s  Made in: %s", this.getId().toUpperCase(), this.getName(), this.getAddress());
+        String str = String.format("%s,%s,%s", this.getId().toUpperCase(), this.getName(), this.getAddress());
         return str;
     }
 }

@@ -17,7 +17,7 @@ public class Category extends Item{
     
     @Override
     public String toString () {
-        String str = String.format("ID: %s   Name: %s", this.getId().toUpperCase(), this.getName());
+        String str = String.format("%s,%s", this.getId().toUpperCase(), this.getName());
         return str;
     }
 }

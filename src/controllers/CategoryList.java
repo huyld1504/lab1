@@ -5,27 +5,30 @@
  */
 package controllers;
 
+import filemanager.FileManager;
+import filemanager.IFileManager;
 import models.Category;
-import java.io.BufferedReader;
-import java.io.File;
-import java.io.FileReader;
-import java.io.IOException;
-import java.io.PrintWriter;
 import java.util.ArrayList;
 import java.util.List;
-import filemanager.IFileManager;
+
 
 /**
  *
  * @author Asus
  */
-public class CategoryList implements IItemManager<Category>, IFileManager {
+public class CategoryList implements IItemManager<Category> {
+    private static final String FILE_NAME = "categories.txt";
 
     private List<Category> list;
 
     public CategoryList() {
-        this.list = new ArrayList<>();
+        this.loadFile();
     }
+
+    public List<Category> getList() {
+        return this.list;
+    }
+    
 
     @Override
     public List<Category> searchByName(String name) {
@@ -40,7 +43,7 @@ public class CategoryList implements IItemManager<Category>, IFileManager {
     }
 
     @Override
-    public Category getOne(String id) {
+    public Category getItem(String id) {
         Category result = null;
 
         for (Category category : list) {
@@ -53,6 +56,12 @@ public class CategoryList implements IItemManager<Category>, IFileManager {
 
     @Override
     public boolean add(Category item) {
+        if (item == null) {
+            return false;
+        }
+        if (this.list == null) {
+            this.list = new ArrayList<>();
+        }
         return this.list.add(item);
     }
 
@@ -63,71 +72,25 @@ public class CategoryList implements IItemManager<Category>, IFileManager {
 
     @Override
     public boolean delete(String id) {
-        Category itemDelete = this.getOne(id);
+        Category itemDelete = this.getItem(id);
         return this.list.remove(itemDelete);
     }
-
-    @Override
-    public void saveFile() {
-        PrintWriter fWriter = null;
-
-        try {
-            File file = new File("categories.txt");
-            if (file.exists()) {
-                fWriter = new PrintWriter("categories.txt");
-
-                for (Category category : this.list) {
-                    String tmp = category.getId() + "," + category.getName() + "\n";
-                    fWriter.print(tmp);
-                    fWriter.flush();
-                }
-            }
-        } catch (IOException e) {
-            System.out.println(e.getMessage());
-        } finally {
-            try {
-                if (fWriter != null) {
-                    fWriter.close();
-                }
-                System.out.println("Save data successfully");
-            } catch (Exception e) {
-                System.out.println(e.getMessage());
-            }
-
-        }
-    }
-
-    @Override
+    
     public void loadFile() {
-        FileReader fReader = null;
-        BufferedReader bReader = null;
-
+        IFileManager fileManager = new FileManager();
+        
         try {
-            File file = new File("categories.txt");
-
-            if (file.exists()) {
-                fReader = new FileReader("categories.txt");
-                bReader = new BufferedReader(fReader);
-
-                while (bReader.ready()) {
-                    String dataLine = bReader.readLine();
-                    String[] fields = dataLine.split(",");
-
-                    if (fields.length == 2) {
-                        Category obj = new Category(fields[0], fields[1]);
-                        this.add(obj);
-                    }
+            List<String> dataLines = fileManager.loadFile(FILE_NAME);
+            for (String dataLine : dataLines) {
+                String[] fields = dataLine.split(",");
+                if (fields.length == 2) {
+                    String id = fields[0];
+                    String name = fields[1];
+                    this.add(new Category(id, name));
                 }
             }
-        } catch (IOException e) {
+        } catch (Exception e) {
             System.out.println(e.getMessage());
-        } finally {
-            try {
-                if (fReader != null) fReader.close();
-                if (bReader != null) bReader.close();
-            } catch (IOException e) {
-                System.out.println(e.getMessage());
-            }
         }
     }
     
@@ -139,12 +102,12 @@ public class CategoryList implements IItemManager<Category>, IFileManager {
         
         System.out.println("---- Category list ----");
         for (Category category : this.list) {
-            System.out.println(category);
+            System.out.println("ID: " + category.getId() + "  Name: " + category.getName());
         }
     }
 
     @Override
     public boolean checkExistId(String id) {
-        return this.getOne(id.toUpperCase()) != null;
+        return this.getItem(id.toUpperCase()) != null;
     }
 }

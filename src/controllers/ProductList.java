@@ -8,28 +8,31 @@ package controllers;
 import models.Product;
 import models.Brand;
 import models.Category;
-import java.io.BufferedReader;
-import java.io.File;
-import java.io.FileReader;
-import java.io.PrintWriter;
 import java.util.ArrayList;
 import java.util.List;
-import java.io.IOException;
+import filemanager.FileManager;
 import filemanager.IFileManager;
+import java.util.Collections;
 
 /**
  *
  * @author Asus
  */
-public class ProductList implements IItemManager<Product>, IFileManager {
+public class ProductList implements IItemManager<Product> {
+
+    private static final String FILE_NAME = "products.txt";
 
     private List<Product> list;
+    private BrandList brandList;
+    private CategoryList categoryList;
 
     public ProductList() {
-        this.list = new ArrayList<>();
+        this.brandList = new BrandList();
+        this.categoryList = new CategoryList();
+        this.list = this.loadFile();
     }
-    
-    public List<Product> getList () {
+
+    public List<Product> getList() {
         return this.list;
     }
 
@@ -42,11 +45,14 @@ public class ProductList implements IItemManager<Product>, IFileManager {
                 result.add(product);
             }
         }
+        if (result.isEmpty()) {
+            return Collections.EMPTY_LIST;
+        }
         return result;
     }
 
     @Override
-    public Product getOne(String id) {
+    public Product getItem(String id) {
         Product result = null;
 
         for (Product product : this.list) {
@@ -60,129 +66,112 @@ public class ProductList implements IItemManager<Product>, IFileManager {
 
     @Override
     public boolean add(Product item) {
-        if (item == null) return false;
+        if (item == null) {
+            return false;
+        }
         return this.list.add(item);
     }
 
     @Override
     public boolean update(String id, Product params) {
-        if (params == null) return false;
-        if (!this.checkExistId(id)) return false;
-        Product oldProduct = this.getOne(id);
-        
+        if (params == null) {
+            return false;
+        }
+        if (!this.checkExistId(id)) {
+            return false;
+        }
+        Product oldProduct = this.getItem(id);
+
         int position = this.list.indexOf(oldProduct);
-        if (position == -1) return false;
-        
-        this.list.set(position, params);       
+        if (position == -1) {
+            return false;
+        }
+
+        this.list.set(position, params);
         return true;
     }
 
     @Override
     public boolean delete(String id) {
-        if (!this.checkExistId(id)) return false;
-        return this.list.remove(this.getOne(id));
+        if (!this.checkExistId(id)) {
+            return false;
+        }
+        return this.list.remove(this.getItem(id));
     }
 
-    @Override
     public void saveFile() {
-        PrintWriter pWriter = null;
-        String fileName = "products.txt";
+        IFileManager fileManager = new FileManager();
+        List<String> listString = new ArrayList<>();
+        for (Product product : this.list) {
+            listString.add(product.toString());
+        }
 
         try {
-            File file = new File(fileName);
-            if (file.exists()) {
-                pWriter = new PrintWriter(fileName);
-                for (Product product : this.list) {
-                    String tmp = product.getId() + "," + product.getName() + "," + product.getBrand().getId().toUpperCase() + "," + product.getCategory().getId().toUpperCase() + "," + product.getModelYear() + "," + product.getListPrice() + "\n";
-                    pWriter.print(tmp);
-                    pWriter.flush();
-                }
-            }
-        } catch (IOException e) {
+            boolean status = fileManager.saveFile(FILE_NAME, listString);
+            System.out.println(status ? "Save data successfully!" : "Failed to save data!");
+        } catch (Exception e) {
             System.out.println(e.getMessage());
-        } finally {
-            if (pWriter != null) {
-                pWriter.close();
-            }
-            System.out.println("Save data successfully");
         }
     }
 
-    @Override
-    public void loadFile() {
-        FileReader fReader = null;
-        BufferedReader bReader = null;
+    private List<Product> loadFile() {
+        IFileManager fileManager = new FileManager();
 
+        List<Product> list = new ArrayList<>();
         try {
-            File file = new File("products.txt");
-            if (file.exists()) {
-                fReader = new FileReader("products.txt");
-                bReader = new BufferedReader(fReader);
-
-                while (bReader.ready()) {
-                    String dataLine = bReader.readLine();
-                    String[] fields = dataLine.split(",");
-
-                    BrandList listOfBrand = new BrandList();
-                    listOfBrand.loadFile();
-
-                    CategoryList listOfCategory = new CategoryList();
-                    listOfCategory.loadFile();
-
-                    if (fields.length == 6) {
-                        String id = fields[0];
-                        String name = fields[1];
-                        Brand brand = listOfBrand.getOne(fields[2]);
-                        Category category = listOfCategory.getOne(fields[3]);
-                        int modelYear = Integer.parseInt(fields[4]);
-                        int listPrice = Integer.parseInt(fields[5]);
-
-                        Product newProduct = new Product(modelYear, listPrice, brand, category, id, name);
-                        this.list.add(newProduct);
+            List<String> dataLines = fileManager.loadFile(FILE_NAME);
+            for (String dataLine : dataLines) {
+                String[] fields = dataLine.split(",");
+                if (fields.length == 6) {
+                    String id = fields[0];
+                    String name = fields[1];
+                    Brand brand = brandList.getItem(fields[2]);
+                    Category category = categoryList.getItem(fields[3]);
+                    int year = Integer.parseInt(fields[4]);
+                    int price = Integer.parseInt(fields[5]);
+                    Product newProduct = new Product(year, price, brand, category, id, name);
+                    if (newProduct != null) {
+                        list.add(newProduct);
                     }
                 }
             }
-        } catch (IOException e) {
+        } catch (Exception e) {
             System.out.println(e.getMessage());
-        } finally {
-            try {
-                if (fReader != null) {
-                    fReader.close();
-                }
-                if (bReader != null) {
-                    bReader.close();
-                }
-            } catch (IOException e) {
-                System.out.println(e.getMessage());
-            }
         }
+        return list;
     }
-    
-    public void openTable () {
+
+    public void openTable() {
         System.out.println("_______________________________________________________________________________________");
-                System.out.println("ID          Name            Brand name  Category name        Year        Price ");
+        System.out.println("ID       Name         Year     Price   Brand    Category");
     }
-    
-    public void closeTable () {
+
+    public void closeTable() {
         System.out.println("_______________________________________________________________________________________");
     }
 
     public void printListFromFile() {
+        List<Product> listInFile = this.loadFile();
+        if (listInFile.isEmpty()) {
+            System.out.println("No Have Product");
+            return;
+        }
         this.openTable();
-        for (Product product : list) {
+        for (Product product : listInFile) {
             String line = "";
-            String[] fields = product.toString().split(",");
+            String data = product.printInfo();
+            String[] fields = data.split(",");
             for (String field : fields) {
-                line += field + "        ";
+                line += field + "     ";
             }
-            System.out.println(line);
+            System.out.println(line.trim());
         }
         this.closeTable();
     }
 
     @Override
     public boolean checkExistId(String id) {
-        return this.getOne(id.toUpperCase()) != null;
+        return this.getItem(id.toUpperCase()) != null;
     }
 
 }
