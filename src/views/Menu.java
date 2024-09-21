@@ -20,9 +20,9 @@ import java.util.List;
  */
 public class Menu {
 
-    final String FORMAT_PRODUCT_ID = "[p | P]\\d{3}";
-    final String FORMAT_BRAND_ID = "[B | b]\\d{3}";
-    final String FORMAT_CATEGORY_ID = "[C | c]\\d{3}";
+    private static final String FORMAT_PRODUCT_ID = "[p | P]\\d{3}";
+    private static final String FORMAT_BRAND_ID = "[B | b]\\d{3}";
+    private static final String FORMAT_CATEGORY_ID = "[C | c]\\d{3}";
 
     private ProductService services;
 
@@ -130,8 +130,8 @@ public class Menu {
     public Product createProduct() {
         Product result;
         ProductList productList = new ProductList();
-        BrandList brandList = new BrandList();
-        CategoryList categoryList = new CategoryList();
+        BrandList brandList = productList.getBrandList();
+        CategoryList categoryList = productList.getCategoryList();
 
         try {
             String validFieldModelYear = "This field is invalid, please enter again: ";
@@ -193,7 +193,6 @@ public class Menu {
 
     public void printProductBySearchName() {
         ProductList productList = new ProductList();
-//        productList.loadFile();
         try {
             String params = DataInput.getString("Enter the name you want to search: ");
             List<Product> listOfProductSearchByName = productList.searchByName(params);
@@ -223,11 +222,9 @@ public class Menu {
     }
 
     public void updateProductById(ProductList productList) {
-        BrandList brandList = new BrandList();
-//        brandList.loadFile();
-        CategoryList categoryList = new CategoryList();
-        categoryList.loadFile();
-
+        BrandList brandList = productList.getBrandList();
+        CategoryList categoryList = productList.getCategoryList();
+        
         try {
             String idUpdate = DataInput.getString("Enter the product's id to update: ");
             Product oldProduct = productList.getItem(idUpdate);
@@ -236,11 +233,13 @@ public class Menu {
                 String name = DataInput.getString("Enter new name: ", oldProduct.getName());
                 String brandId = DataInput.getString("Enter new brand id: ", oldProduct.getBrand().getId()).toUpperCase();
                 while (!brandList.checkExistId(brandId)) {
+                    brandList.printList();
                     brandId = DataInput.getString("Brand id does not exist, please enter again: ", oldProduct.getBrand().getId()).toUpperCase();
                 }
                 String categoryId = DataInput.getString("Enter category id: ", oldProduct.getCategory().getId()).toUpperCase();
                 while (!categoryList.checkExistId(categoryId)) {
-                    categoryId = DataInput.getString("Category does not exist, please enter again", oldProduct.getCategory().getId()).toUpperCase();
+                    categoryList.printList();
+                    categoryId = DataInput.getString("Category does not exist, please enter again: ", oldProduct.getCategory().getId()).toUpperCase();
                 }
                 int modelYear = DataInput.getInt("Enter new model year: ", oldProduct.getModelYear());
                 int listPrice = DataInput.getInt("Enter new price: ", oldProduct.getListPrice());
@@ -253,8 +252,8 @@ public class Menu {
                         System.out.println(productList.update(oldProduct.getId(), newProduct) ? "Updated" : "Failed");
                     }
                 } else {
-                    System.out.println("Invalid Data");
-
+                    System.out.println("Invalid Format");
+                    
                 }
             } else {
                 System.out.println("Product does not exists!");

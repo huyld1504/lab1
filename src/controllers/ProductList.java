@@ -35,6 +35,14 @@ public class ProductList implements IItemManager<Product> {
     public List<Product> getList() {
         return this.list;
     }
+    
+    public BrandList getBrandList() {
+        return this.brandList;
+    }
+    
+    public CategoryList getCategoryList() {
+        return this.categoryList;
+    }
 
     @Override
     public List<Product> searchByName(String name) {
