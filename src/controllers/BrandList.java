@@ -84,7 +84,6 @@ public class BrandList implements IItemManager<Brand> {
             List<String> dataLines = fileManager.loadFile(FILE_NAME);
             
             for (String dataLine : dataLines) {
-             
                 String[] fields = dataLine.split(",");
                 if (fields.length == 3) {
                     String id = fields[0];

@@ -106,8 +106,14 @@ public class Menu {
                     }
                     break;
                 default:
-                    System.out.println("Good bye!!!");
-                    flag = !flag;
+                    flagOption = DataInput.confirmYesOrNo("Exit the program? (y/n) ");
+                    if(flagOption) {
+                        System.out.println("Good bye!!!");
+                        flag = !flag;
+                        break;
+                    } 
+                    break;
+                    
             }
         } while (flag);
     }
@@ -134,16 +140,16 @@ public class Menu {
         CategoryList categoryList = productList.getCategoryList();
 
         try {
-            String validFieldModelYear = "This field is invalid, please enter again: ";
+            String validFieldMessage = "This field is invalid, please enter again: ";
 
             // Product ID
             String id = DataInput.getString(">> Enter id: ").toUpperCase();
-            while (productList.checkExistId(id)) {
-                id = DataInput.getString(">> The product ID existed, please enter again: ");
-            }
             while (!validateFormat(id, FORMAT_PRODUCT_ID)) {
                 System.out.println("Format not match (Pxxx with x is a number)");
                 id = DataInput.getString("Please enter again: ");
+            }
+            while (productList.checkExistId(id)) {
+                id = DataInput.getString(">> The product ID existed, please enter again: ");
             }
 
             //Product name
@@ -175,7 +181,7 @@ public class Menu {
             int modelYear, listPrice;
             modelYear = DataInput.getInt(">> Enter year: ");
             while (!validateYear(modelYear)) {
-                modelYear = DataInput.getInt(validFieldModelYear);
+                modelYear = DataInput.getInt(validFieldMessage);
             }
             listPrice = DataInput.getInt(">> Enter price: ");
             while (!validatePositiveInt(listPrice)) {
@@ -230,17 +236,24 @@ public class Menu {
             Product oldProduct = productList.getItem(idUpdate);
             if (oldProduct != null) {
                 // form fill the update infomation
+                
+                //Update name
                 String name = DataInput.getString("Enter new name: ", oldProduct.getName());
+                
+                //Update brand
                 String brandId = DataInput.getString("Enter new brand id: ", oldProduct.getBrand().getId()).toUpperCase();
                 while (!brandList.checkExistId(brandId)) {
                     brandList.printList();
                     brandId = DataInput.getString("Brand id does not exist, please enter again: ", oldProduct.getBrand().getId()).toUpperCase();
                 }
+                //Update category
                 String categoryId = DataInput.getString("Enter category id: ", oldProduct.getCategory().getId()).toUpperCase();
                 while (!categoryList.checkExistId(categoryId)) {
                     categoryList.printList();
                     categoryId = DataInput.getString("Category does not exist, please enter again: ", oldProduct.getCategory().getId()).toUpperCase();
                 }
+                
+                //Update model year and price
                 int modelYear = DataInput.getInt("Enter new model year: ", oldProduct.getModelYear());
                 int listPrice = DataInput.getInt("Enter new price: ", oldProduct.getListPrice());
 

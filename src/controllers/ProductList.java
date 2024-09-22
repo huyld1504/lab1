@@ -35,11 +35,11 @@ public class ProductList implements IItemManager<Product> {
     public List<Product> getList() {
         return this.list;
     }
-    
+
     public BrandList getBrandList() {
         return this.brandList;
     }
-    
+
     public CategoryList getCategoryList() {
         return this.categoryList;
     }
@@ -150,12 +150,12 @@ public class ProductList implements IItemManager<Product> {
     }
 
     public void openTable() {
-        System.out.println("_______________________________________________________________________________________");
+        System.out.println("_________________________________________________________________________");
         System.out.println("ID       Name         Year     Price   Brand    Category");
     }
 
     public void closeTable() {
-        System.out.println("_______________________________________________________________________________________");
+        System.out.println("_________________________________________________________________________");
     }
 
     public void printListFromFile() {

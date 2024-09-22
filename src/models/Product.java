@@ -13,8 +13,6 @@ public class Product extends Item{
     private int modelYear, listPrice;
     private Brand brand;
     private Category category;
-    
-    
 
     public Product(String id, String name) {
         super(id, name);

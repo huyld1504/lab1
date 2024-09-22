@@ -42,36 +42,36 @@ public class DataInput {
             return input;
         }
     }
-    
+
     public static String getString(String message, String oldData) throws Exception {
         Scanner sc = openScanner();
         System.out.print(message);
         String input = sc.nextLine();
-        
+
         if (input.trim().equals("")) {
             input = oldData;
         }
         return input;
     }
-    
-    public static int getInt (String message, int oldData) throws Exception {
+
+    public static int getInt(String message, int oldData) throws Exception {
         Scanner sc = openScanner();
         System.out.print(message);
         String input = sc.nextLine();
-        
+
         if (!input.trim().matches(FORMAT_NUMBER)) {
             return oldData;
         }
-        
+
         return Integer.parseInt(input);
     }
-    
+
     public static boolean confirmYesOrNo(String message) {
         try {
             boolean flag = true;
             String option;
             while (flag) {
-                option = DataInput.getString(message);
+                option = DataInput.getString(message, "a");
                 if (option.equalsIgnoreCase("y")) {
                     flag = true;
                     break;
