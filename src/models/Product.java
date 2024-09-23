@@ -9,7 +9,7 @@ package models;
  *
  * @author Asus
  */
-public class Product extends Item{
+public class Product extends Item implements Comparable<Product>{
     private int modelYear, listPrice;
     private Brand brand;
     private Category category;
@@ -67,5 +67,12 @@ public class Product extends Item{
     public String printInfo() {
         String s = String.format("%s,%s,%d,%d,%s,%s", this.getId().toUpperCase(), this.getName(), this.modelYear, this.listPrice, this.getBrand().getName(), this.getCategory().getName());
         return s;
+    }
+
+    @Override
+    public int compareTo(Product o) {
+        if (this.getId().compareTo(o.getId()) > 0) return 1;
+        else if (this.getId().compareTo(o.getId()) < 0) return -1;
+        else return 0;
     }
 }

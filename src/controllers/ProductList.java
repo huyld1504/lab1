@@ -56,6 +56,7 @@ public class ProductList implements IItemManager<Product> {
         if (result.isEmpty()) {
             return Collections.EMPTY_LIST;
         }
+        Collections.sort(result);
         return result;
     }
 
@@ -160,6 +161,7 @@ public class ProductList implements IItemManager<Product> {
 
     public void printListFromFile() {
         List<Product> listInFile = this.loadFile();
+        Collections.sort(listInFile);
         if (listInFile.isEmpty()) {
             System.out.println("No Have Product");
             return;

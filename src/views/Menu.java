@@ -144,12 +144,14 @@ public class Menu {
 
             // Product ID
             String id = DataInput.getString(">> Enter id: ").toUpperCase();
-            while (!validateFormat(id, FORMAT_PRODUCT_ID)) {
+            while(!validateFormat(id, FORMAT_PRODUCT_ID) || productList.checkExistId(id)) {
+                while (!validateFormat(id, FORMAT_PRODUCT_ID)) {
                 System.out.println("Format not match (Pxxx with x is a number)");
                 id = DataInput.getString("Please enter again: ");
             }
             while (productList.checkExistId(id)) {
                 id = DataInput.getString(">> The product ID existed, please enter again: ");
+            }
             }
 
             //Product name
@@ -239,6 +241,9 @@ public class Menu {
                 
                 //Update name
                 String name = DataInput.getString("Enter new name: ", oldProduct.getName());
+                if (name.equals(oldProduct.getName())) {
+                    System.out.println("You donot enter this field to update, the old value is " + oldProduct.getName());
+                }
                 
                 //Update brand
                 String brandId = DataInput.getString("Enter new brand id: ", oldProduct.getBrand().getId()).toUpperCase();
@@ -246,16 +251,28 @@ public class Menu {
                     brandList.printList();
                     brandId = DataInput.getString("Brand id does not exist, please enter again: ", oldProduct.getBrand().getId()).toUpperCase();
                 }
+                if(brandId.equalsIgnoreCase(oldProduct.getBrand().getId())) {
+                    System.out.println("You do not enter this field to update, the old value is " + oldProduct.getBrand().getId());
+                }
                 //Update category
                 String categoryId = DataInput.getString("Enter category id: ", oldProduct.getCategory().getId()).toUpperCase();
                 while (!categoryList.checkExistId(categoryId)) {
                     categoryList.printList();
                     categoryId = DataInput.getString("Category does not exist, please enter again: ", oldProduct.getCategory().getId()).toUpperCase();
                 }
+                if(categoryId.equalsIgnoreCase(oldProduct.getCategory().getId())) {
+                    System.out.println("You do not enter this field to update, the old value is " + oldProduct.getCategory().getId());
+                }
                 
                 //Update model year and price
                 int modelYear = DataInput.getInt("Enter new model year: ", oldProduct.getModelYear());
+                if (modelYear == oldProduct.getModelYear()) {
+                    System.out.println("You do not enter this field to update, the old value is " + oldProduct.getModelYear());
+                }
                 int listPrice = DataInput.getInt("Enter new price: ", oldProduct.getListPrice());
+                if (listPrice == oldProduct.getListPrice()) {
+                    System.out.println("You do not enter this field to update, the old value is " + oldProduct.getListPrice());
+                }
 
                 boolean isValidData = validateFormat(brandId, FORMAT_BRAND_ID) && validateFormat(categoryId, FORMAT_CATEGORY_ID);
                 if (isValidData) {
